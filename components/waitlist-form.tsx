@@ -50,7 +50,7 @@ export function WaitlistForm() {
       <div className="relative">
         <Input
           type="email"
-          placeholder="yash@company.com"
+          placeholder="Enter your work email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={status === "loading"}

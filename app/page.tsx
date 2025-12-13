@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 // FIXED: Added "Search" to the imports below
 import { ArrowRight, Terminal, Search, Cpu, GitBranch, Play, FileCode } from "lucide-react"
-import { FadeInUp, FadeIn } from "@/components/animations"
+import { FadeInUp, FadeIn } from "@/components/motion"
 
 export default function LandingPage() {
   

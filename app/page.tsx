@@ -3,12 +3,12 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+// FIXED: Added "Search" to the imports below
 import { ArrowRight, Terminal, Search, Cpu, GitBranch, Play, FileCode } from "lucide-react"
 import { FadeInUp, FadeIn } from "@/components/animations"
 
 export default function LandingPage() {
   
-  // Function to smooth scroll to "How it works"
   const scrollToHowItWorks = () => {
     const element = document.getElementById('how-it-works');
     if (element) {
@@ -25,7 +25,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3 font-bold text-xl tracking-tight">
             <div className="relative w-8 h-8">
                 <Image 
-                src="/troql_logo2.png" // Make sure this matches your file name in the public folder
+                src="/troql_logo2.png" 
                 alt="Troql Logo" 
                 fill
                 className="object-contain"
@@ -34,7 +34,6 @@ export default function LandingPage() {
             Troql
           </div>
           <div className="flex items-center gap-4">
-            {/* "Sign In" goes to waitlist because public users can't login yet */}
             <Link href="/waitlist" className="hidden md:block">
               <Button variant="ghost" className="text-zinc-400 hover:text-white">Sign In</Button>
             </Link>
@@ -49,10 +48,8 @@ export default function LandingPage() {
 
       {/* HERO SECTION */}
       <section className="relative pt-24 pb-32 px-6 border-b border-white/5 overflow-hidden">
-         {/* Background Glow */}
          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-500/10 blur-[120px] rounded-full -z-10 pointer-events-none" />
 
-        {/* UPDATED GRID: Changed from lg:grid-cols-2 to give more space to the video (5fr text / 7fr video) */}
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-16 items-center">
           <div className="text-left">
             <FadeInUp delay={0.1}>
@@ -73,8 +70,6 @@ export default function LandingPage() {
                         Get Early Access
                     </Button>
                 </Link>
-                
-                {/* "How it works" button instead of "View Demo" */}
                 <Button 
                   variant="outline" 
                   size="lg" 
@@ -90,27 +85,17 @@ export default function LandingPage() {
             </FadeInUp>
           </div>
 
-          {/* Right Side: The Real Product Video */}
           <FadeIn delay={0.4} className="relative">
-             {/* UPDATED VIDEO CONTAINER: 
-                 1. Removed group-hover:border-indigo-500/30 to stop the hover effect.
-                 2. Made base border subtler (border-zinc-800/50).
-                 3. Because grid col span increased, this will naturally be larger.
-             */}
              <div className="relative rounded-2xl bg-[#0B0B0C] border border-zinc-800/50 shadow-2xl overflow-hidden aspect-video flex items-center justify-center">
-                
                 <video 
                   autoPlay 
                   loop 
                   muted 
                   playsInline 
-                  /* Added pointer-events-none to disable hover controls from browser */
                   className="w-full h-full object-cover pointer-events-none"
                 >
                   <source src="/demo.mp4" type="video/mp4" />
                 </video>
-
-                {/* UPDATED: Removed the "Live Preview" Badge div completely */}
              </div>
           </FadeIn>
         </div>
@@ -142,7 +127,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FEATURE 1: The Map */}
+      {/* FEATURE 1: The Map (WITH VIDEO) */}
       <section className="py-24 px-6 border-b border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <FadeInUp>
@@ -164,17 +149,17 @@ export default function LandingPage() {
                   playsInline 
                   className="w-full h-full object-cover pointer-events-none"
                 >
-                  {/* Make sure you have architecture.mp4 in your public folder! */}
                   <source src="/architecture.mp4" type="video/mp4" />
+                  {/* If this video is missing, it will be blank. Ensure file exists! */}
                 </video>
             </FadeIn>
         </div>
       </section>
       
-      {/* Search Feature */}
+      {/* Search Feature (WITH VIDEO) */}
       <section className="py-24 px-6 bg-zinc-900/20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            {/* Search Video (Order 2 on mobile, Order 1 on Desktop) */}
+            {/* Search Video */}
             <FadeIn className="order-2 md:order-1 relative rounded-2xl bg-[#0B0B0C] border border-zinc-800/50 shadow-2xl overflow-hidden aspect-video flex items-center justify-center">
                 <video 
                   autoPlay 
@@ -183,7 +168,6 @@ export default function LandingPage() {
                   playsInline 
                   className="w-full h-full object-cover pointer-events-none"
                 >
-                   {/* Make sure you have search.mp4 in your public folder! */}
                   <source src="/search.mp4" type="video/mp4" />
                 </video>
             </FadeIn>

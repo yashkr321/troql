@@ -9,14 +9,13 @@ interface AnimationProps {
   className?: string
 }
 
-// A smooth fade up effect for text blocks
 export function FadeInUp({ children, delay = 0, className = "" }: AnimationProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }} // Triggers slightly before the element hits the bottom of screen
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }} // "Vercel-like" easing curve
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
       className={className}
     >
       {children}
@@ -24,7 +23,6 @@ export function FadeInUp({ children, delay = 0, className = "" }: AnimationProps
   )
 }
 
-// A simpler fade in for larger sections
 export function FadeIn({ children, delay = 0, className = "" }: AnimationProps) {
   return (
     <motion.div
@@ -39,7 +37,6 @@ export function FadeIn({ children, delay = 0, className = "" }: AnimationProps) 
   )
 }
 
-// A container for lists that makes items stagger in one by one
 export function StaggerContainer({ children, className = "" }: { children: ReactNode, className?: string }) {
   return (
     <motion.div
@@ -50,7 +47,7 @@ export function StaggerContainer({ children, className = "" }: { children: React
         hidden: {},
         show: {
           transition: {
-            staggerChildren: 0.15, // The delay between each item appearing
+            staggerChildren: 0.15,
           },
         },
       }}
@@ -61,10 +58,10 @@ export function StaggerContainer({ children, className = "" }: { children: React
   )
 }
 
-// The item inside a staggered list
+// THIS WAS THE BROKEN PART - FIXED NOW
 export function StaggerItem({ children, className = "" }: { children: ReactNode, className?: string }) {
     return (
-      <motion.div  // <--- The Fix: Changed to motion.div
+      <motion.div 
         variants={{
             hidden: { opacity: 0, y: 20 },
             show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }

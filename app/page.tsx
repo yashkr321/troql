@@ -154,9 +154,19 @@ export default function LandingPage() {
                     New engineers usually spend weeks mentally mapping out how `auth` connects to `database`. Troql generates this map instantly, visualizing your services and dependencies.
                 </p>
             </FadeInUp>
-            <FadeIn className="bg-zinc-900/50 rounded-2xl aspect-video border border-white/5 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-indigo-500/5"></div>
-                <GitBranch className="w-20 h-20 text-zinc-700" />
+            
+            {/* Architecture Video */}
+            <FadeIn className="relative rounded-2xl bg-[#0B0B0C] border border-zinc-800/50 shadow-2xl overflow-hidden aspect-video flex items-center justify-center">
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline 
+                  className="w-full h-full object-cover pointer-events-none"
+                >
+                  {/* Make sure you have architecture.mp4 in your public folder! */}
+                  <source src="/architecture.mp4" type="video/mp4" />
+                </video>
             </FadeIn>
         </div>
       </section>
@@ -164,10 +174,20 @@ export default function LandingPage() {
       {/* Search Feature */}
       <section className="py-24 px-6 bg-zinc-900/20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <FadeIn className="order-2 md:order-1 bg-zinc-900/50 rounded-2xl aspect-video border border-white/5 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-purple-500/5"></div>
-                <Search className="w-20 h-20 text-zinc-700" />
+            {/* Search Video (Order 2 on mobile, Order 1 on Desktop) */}
+            <FadeIn className="order-2 md:order-1 relative rounded-2xl bg-[#0B0B0C] border border-zinc-800/50 shadow-2xl overflow-hidden aspect-video flex items-center justify-center">
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline 
+                  className="w-full h-full object-cover pointer-events-none"
+                >
+                   {/* Make sure you have search.mp4 in your public folder! */}
+                  <source src="/search.mp4" type="video/mp4" />
+                </video>
             </FadeIn>
+
             <FadeInUp className="order-1 md:order-2">
                 <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-6 border border-purple-500/20">
                     <Search className="w-6 h-6 text-purple-400" />

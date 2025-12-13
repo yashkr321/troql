@@ -201,7 +201,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="py-12 border-t border-white/10 text-zinc-600 text-sm bg-[#0B0B0C] text-center">
-        <p>© 2025 Troql Inc. Built in San Francisco.</p>
+        <p>© 2025 Troql Inc.</p>
       </footer>
 
     </div>

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { ReactNode } from "react"
 
+// FIXED VERSION
 interface AnimationProps {
   children: ReactNode
   delay?: number
@@ -58,7 +59,6 @@ export function StaggerContainer({ children, className = "" }: { children: React
   )
 }
 
-// THIS WAS THE BROKEN PART - FIXED NOW
 export function StaggerItem({ children, className = "" }: { children: ReactNode, className?: string }) {
     return (
       <motion.div 

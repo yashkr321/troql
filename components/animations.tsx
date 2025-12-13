@@ -64,7 +64,7 @@ export function StaggerContainer({ children, className = "" }: { children: React
 // The item inside a staggered list
 export function StaggerItem({ children, className = "" }: { children: ReactNode, className?: string }) {
     return (
-      <motion.variants
+      <motion.div  // <--- FIXED: Changed from motion.variants to motion.div
         variants={{
             hidden: { opacity: 0, y: 20 },
             show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
@@ -72,6 +72,6 @@ export function StaggerItem({ children, className = "" }: { children: ReactNode,
         className={className}
       >
         {children}
-      </motion.variants>
+      </motion.div>
     )
   }

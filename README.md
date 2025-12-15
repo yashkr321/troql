@@ -4,7 +4,7 @@
 
 Troql parses your GitHub repository and generates an interactive node-map of your folder structure. Designed to help developers navigate deeply nested App Router projects without getting lost in layouts within layouts.
 
-🔗 **Live Demo:** [https://troql.com](https://troql.com)
+🔗 **Live Demo:** [https://troql.com/demo](https://troql.com/demo)
 
 ---
 

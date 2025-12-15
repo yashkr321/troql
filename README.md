@@ -4,7 +4,7 @@
 
 Troql parses your GitHub repository and generates an interactive node-map of your folder structure. It is designed to help developers navigate deeply nested App Router projects (layouts inside layouts) without getting lost.
 
-🔗 **Live Demo:** [https://troql.com](https://troql.com)
+🔗 **Live Demo:** [https://troql.com/demo]
 
 ## ⚡ Features
 - **Instant Visualization:** Turns file trees into interactive React Flow graphs.
@@ -24,7 +24,7 @@ Troql parses your GitHub repository and generates an interactive node-map of you
 First, clone the repository:
 
 ```bash
-git clone [https://github.com/yashkr321/troql.git](https://github.com/yashkr321/troql.git)
+git clone https://github.com/yashkr321/troql.git
 cd troql
 
 Install dependencies:

@@ -1,6 +1,6 @@
 # Troql 🗺️
 
-**Visualize your Next.js App Router architecture instantly.**
+**Visualize your codebase architecture instantly.**
 
 Troql parses your GitHub repository and generates an interactive node-map of your folder structure. Designed to help developers navigate deeply nested App Router projects without getting lost in layouts within layouts.
 

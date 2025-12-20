@@ -9,7 +9,7 @@ import { SummaryCard } from "./summary-card"
 import { FlowVisualizer } from "./flow-visualizer"
 import { EditProposalModal, EditProposal } from "./edit-proposal-modal"
 import { cn } from "@/lib/utils"
-import { Code, Terminal, Download, Sparkles } from "lucide-react"
+import { Code, Terminal, Download, Sparkles, Rocket, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Dashboard() {
@@ -30,6 +30,9 @@ export function Dashboard() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isGeneratingProposal, setIsGeneratingProposal] = useState(false)
   const [isApplyingEdit, setIsApplyingEdit] = useState(false)
+
+  // --- COMING SOON STATE ---
+  const [showComingSoon, setShowComingSoon] = useState(false)
 
   // Proof-of-Preview State
   const [previewJobId, setPreviewJobId] = useState<string | null>(null)
@@ -168,7 +171,14 @@ export function Dashboard() {
 
   // --- PHASE 4 -> PHASE 7/8 TRANSITION: EDIT LOGIC ---
 
+  // --- NEW: HANDLE REQUEST EDIT (COMING SOON) ---
   const handleRequestEdit = async () => {
+    // TEMPORARY: Show Coming Soon Modal
+    setShowComingSoon(true)
+    
+    // NOTE: Below is the actual logic that we are temporarily bypassing.
+    // Uncomment this block and remove the setShowComingSoon(true) line when ready to launch.
+    /*
     if (!activeProject) return;
     const targetFile = "package.json"; 
 
@@ -211,6 +221,7 @@ export function Dashboard() {
     } finally {
         setIsGeneratingProposal(false);
     }
+    */
   };
 
   const triggerPreview = async (repoUrl: string, targetFile: string, diff: string) => {
@@ -452,6 +463,44 @@ export function Dashboard() {
             )}
 
         </div>
+
+        {/* --- COMING SOON MODAL --- */}
+        {showComingSoon && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="relative w-full max-w-sm p-6 mx-4 bg-card border border-border rounded-xl shadow-lg animate-in zoom-in-95 duration-200">
+              
+              <button 
+                onClick={() => setShowComingSoon(false)}
+                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mb-2">
+                  <Rocket className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold tracking-tight">AI Agent Coming Soon</h3>
+                  <p className="text-sm text-muted-foreground">
+                    We're finalizing the sandbox security features for the automated edit agent. Stay tuned for the release!
+                  </p>
+                </div>
+
+                <div className="pt-2 w-full">
+                  <Button 
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                    onClick={() => setShowComingSoon(false)}
+                  >
+                    Got it
+                  </Button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
 
         {/* MODALS */}
         <EditProposalModal 

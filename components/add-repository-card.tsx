@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useSession } from "next-auth/react"
 import { cn } from "@/lib/utils"
+// Assuming this component exists in your project as per your provided code
+import { OrgLoginHint } from "./org-login-hint" 
 
 interface AddRepositoryCardProps {
-  // Legacy handler (keeping for safety)
   onScan?: (repo: string, tasks: any[], stack: string, script?: string[]) => void
-  // NEW: Robust handler that passes everything (Tasks, Script, Summary, Features)
   onDataReceived?: (data: any, repoUrl: string) => void
 }
 
@@ -38,14 +38,12 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
     setShowRepoList(false) 
 
     try {
-      // @ts-ignore
-      const userToken = session?.accessToken
-      
+      // Phase 8: No client-side headers needed. 
+      // The backend /api/analyze route should handle auth via server session.
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { 
             "Content-Type": "application/json",
-            "Authorization": userToken ? `Bearer ${userToken}` : ""
         },
         body: JSON.stringify({ repoUrl: targetUrl }),
       })
@@ -54,13 +52,9 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
 
       if (!data.success) throw new Error(data.error)
       
-      // === UPDATED HANDLER LOGIC ===
-      // 1. Prefer the new robust handler if provided
       if (onDataReceived) {
         onDataReceived(data, targetUrl)
-      } 
-      // 2. Fallback to the old handler
-      else if (onScan) {
+      } else if (onScan) {
         onScan(
           targetUrl.replace("https://github.com/", ""), 
           data.tasks, 
@@ -87,20 +81,24 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
     setShowRepoList(true)
     if (userRepos.length > 0) return 
 
+    // Guard: Require session
+    if (!session) return
+
     setLoadingRepos(true)
     try {
-        // @ts-ignore
-        const userToken = session?.accessToken
-        if (!userToken) throw new Error("Please sign in first")
+        // Phase 8: Use session-based auth (cookies)
+        const res = await fetch("/api/user/repos")
+        
+        if (!res.ok) {
+             if (res.status === 401) throw new Error("Please sign in to view repos")
+             throw new Error("Failed to fetch repositories")
+        }
 
-        const res = await fetch("/api/user/repos", {
-            headers: { "Authorization": `Bearer ${userToken}` }
-        })
         const data = await res.json()
         if (data.repos) setUserRepos(data.repos)
 
     } catch (err) {
-        console.error(err)
+        console.error("Repo fetch error:", err)
     } finally {
         setLoadingRepos(false)
     }
@@ -111,8 +109,9 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
   }, [userRepos, repoSearch])
 
   return (
-    <Card className="bg-card border-border w-full shadow-sm">
-      <CardHeader className="pb-3 p-4 md:p-6 md:pb-3 border-b border-border/50">
+    // Removed border from card, added shadow-none
+    <Card className="bg-card/50 border-none w-full shadow-none">
+      <CardHeader className="pb-3 p-4 md:p-6 md:pb-3">
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -132,12 +131,11 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
               </div>
             </div>
             
-            {/* TOGGLE BUTTON */}
             {session && (
                 <Button 
                     variant={showRepoList ? "secondary" : "outline"}
                     size="sm"
-                    className="gap-2"
+                    className="gap-2 border-none bg-secondary/50 hover:bg-secondary"
                     onClick={handleToggleRepoList}
                 >
                     {showRepoList ? <X className="w-4 h-4" /> : <FolderGit2 className="w-4 h-4" />}
@@ -154,11 +152,12 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
             <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="space-y-2">
                   <div className="relative">
+                      {/* Removed border from input, added subtle background */}
                       <Input
                         placeholder="https://github.com/owner/repo"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
-                        className="pl-9 h-11 bg-background border-input"
+                        className="pl-9 h-11 bg-secondary/30 border-none"
                       />
                       {session ? (
                           <Lock className="w-4 h-4 absolute left-3 top-3.5 text-green-500" />
@@ -167,7 +166,7 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
                       )}
                   </div>
                   {error && <p className="text-xs text-red-500 font-medium flex items-center gap-1">
-                     <X className="w-3 h-3" /> {error}
+                      <X className="w-3 h-3" /> {error}
                   </p>}
                 </div>
                 
@@ -186,11 +185,16 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
                   )}
                 </Button>
 
-                {!session && (
-                    <div className="p-3 rounded-lg bg-secondary/50 border border-border/50 text-xs text-muted-foreground text-center">
-                        Sign in to scan private repositories
-                    </div>
-                )}
+                {/* FOOTER AREA: System Hints */}
+                <div className="mt-2 flex flex-col items-center gap-3">
+                    <OrgLoginHint />
+
+                    {!session && (
+                        <p className="text-[11px] text-muted-foreground">
+                            Looking for private repos? <span className="underline decoration-dotted cursor-pointer hover:text-foreground transition-colors">Sign in</span>
+                        </p>
+                    )}
+                </div>
             </div>
         )}
 
@@ -199,15 +203,17 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
             <div className="space-y-3 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="relative">
                     <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
+                    {/* Removed border from search input */}
                     <Input 
                         placeholder="Filter repos..." 
-                        className="pl-9 h-9 text-sm" 
+                        className="pl-9 h-9 text-sm bg-secondary/30 border-none" 
                         value={repoSearch}
                         onChange={(e) => setRepoSearch(e.target.value)}
                     />
                 </div>
 
-                <div className="overflow-y-auto border border-border rounded-md bg-secondary/20 p-2 space-y-1 max-h-[260px] custom-scrollbar">
+                {/* Removed border from container, custom scrollbar */}
+                <div className="overflow-y-auto rounded-md bg-secondary/20 p-2 space-y-1 max-h-[260px] custom-scrollbar">
                     {loadingRepos ? (
                         <div className="flex flex-col items-center justify-center h-40 gap-2 text-muted-foreground">
                             <Loader2 className="w-6 h-6 animate-spin text-primary" />
@@ -224,7 +230,7 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
                                 key={repo.id}
                                 onClick={() => handleScan(repo.url)}
                                 disabled={loading}
-                                className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-secondary/80 border border-transparent hover:border-border transition-all group text-left"
+                                className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-secondary/80 border border-transparent transition-all group text-left"
                             >
                                 <div className="flex items-center gap-3 min-w-0">
                                     <div className={cn(
@@ -252,6 +258,7 @@ export function AddRepositoryCard({ onScan, onDataReceived }: AddRepositoryCardP
                 </div>
             </div>
         )}
+
       </CardContent>
     </Card>
   )

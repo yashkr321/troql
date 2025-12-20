@@ -1,18 +1,18 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Send, Bot, User, Sparkles } from "lucide-react"
+import { Send, Bot, User, Sparkles, BrainCircuit } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-// 1. Import Next.js Image component
 import Image from "next/image"
 
 interface WikiCardProps {
   repoName?: string
   stack?: string
+  architecture?: any
 }
 
 interface Message {
@@ -20,7 +20,7 @@ interface Message {
   content: string
 }
 
-export function WikiCard({ repoName = "this repo", stack = "Unknown" }: WikiCardProps) {
+export function WikiCard({ repoName = "this repo", stack = "Unknown", architecture }: WikiCardProps) {
   const [question, setQuestion] = useState("")
   const [loading, setLoading] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
@@ -47,7 +47,12 @@ export function WikiCard({ repoName = "this repo", stack = "Unknown" }: WikiCard
       const res = await fetch("/api/wiki", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, repoName, stack }),
+        body: JSON.stringify({ 
+            question, 
+            repoName, 
+            stack, 
+            architecture
+        }),
       })
       const data = await res.json()
 
@@ -64,25 +69,36 @@ export function WikiCard({ repoName = "this repo", stack = "Unknown" }: WikiCard
       
       {/* HEADER */}
       <CardHeader className="pb-3 p-4 border-b border-border/40 bg-card z-10 shrink-0">
-        <div className="flex items-center gap-2.5">
-          {/* 2. REPLACED SPARKLE ICON WITH LOGO */}
-          <div className="w-8 h-8 shrink-0">
-            <Image 
-              src="/troql_logo2.png" 
-              alt="Troql AI" 
-              width={32} 
-              height={32} 
-              className="w-full h-full object-contain"
-            />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 shrink-0">
+              <Image 
+                src="/troql_logo2.png" 
+                alt="Troql AI" 
+                width={32} 
+                height={32} 
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div>
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                CodeWiki
+                <Badge variant="secondary" className="text-[10px] h-5 px-1.5 font-normal text-muted-foreground">
+                  Beta
+                </Badge>
+              </CardTitle>
+            </div>
           </div>
-          <div>
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              CodeWiki
-              <Badge variant="secondary" className="text-[10px] h-5 px-1.5 font-normal text-muted-foreground">
-                Beta
-              </Badge>
-            </CardTitle>
-          </div>
+
+          {/* NEW: Trust Indicator */}
+          {architecture && (
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-secondary/40 border border-border/50">
+              <BrainCircuit className="w-3 h-3 text-muted-foreground/70" />
+              <span className="text-[10px] font-medium text-muted-foreground/80 tracking-tight">
+                Using analyzed architecture
+              </span>
+            </div>
+          )}
         </div>
       </CardHeader>
 
@@ -94,7 +110,6 @@ export function WikiCard({ repoName = "this repo", stack = "Unknown" }: WikiCard
             "[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         )}>
             
-            {/* MINIMAL WELCOME SCREEN */}
             {messages.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full text-center p-8 animate-in fade-in zoom-in-95 duration-500">
                     <div className="mb-6 relative">
@@ -106,12 +121,11 @@ export function WikiCard({ repoName = "this repo", stack = "Unknown" }: WikiCard
                         Hi there!
                     </h2>
                     <p className="text-muted-foreground text-sm md:text-base max-w-[280px] leading-relaxed">
-                        Ask me any questions about the code
+                        Ask me about {repoName}'s architecture or code.
                     </p>
                 </div>
             )}
 
-            {/* Chat Messages */}
             {messages.map((m, i) => (
               <div key={i} className={cn("flex gap-3", m.role === "user" ? "flex-row-reverse" : "")}>
                 <div className={cn(
